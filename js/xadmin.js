@@ -1,9 +1,56 @@
+Array.prototype.remove = function(val) { 
+    var index = this.indexOf(val); 
+    if (index > -1) { 
+        return  this.splice(index, 1); 
+    }
+
+};
+
+
+
 $(function () {
+
     //加载弹出层
     layui.use(['form','element'],
     function() {
         layer = layui.layer;
         element = layui.element;
+
+
+        element.on('tabDelete(xbs_tab)', function(data){
+          var id  = $(this).parent().attr('lay-id')-1;
+
+            if(getCookie('tab_list')){
+                tab_list = getCookie('tab_list').split(',');
+            }else{
+                tab_list = [];
+            }
+
+
+            var index = -1;
+
+            for (var i in tab_list) {
+                if(tab_list[i]==id){
+                    index = i;
+                }
+             } 
+
+
+            if (index > -1) { 
+                tab_list.splice(index, 1); 
+            }
+
+            setCookie('tab_list',tab_list);
+
+        });
+
+        if(getCookie('tab_list')){
+            tab_list = getCookie('tab_list').split(',');
+
+            for (var i in tab_list) {
+                 $('.left-nav #nav li').eq(tab_list[i]).click();
+            }
+         }
     });
 
     //触发事件
@@ -32,23 +79,23 @@ $(function () {
 
     tableCheck = {
         init:function  () {
-            $(".layui-form-checkbox").click(function(event) {
+            $(".x-admin .layui-form-checkbox").click(function(event) {
                 if($(this).hasClass('layui-form-checked')){
                     $(this).removeClass('layui-form-checked');
                     if($(this).hasClass('header')){
-                        $(".layui-form-checkbox").removeClass('layui-form-checked');
+                        $(".x-admin .layui-form-checkbox").removeClass('layui-form-checked');
                     }
                 }else{
                     $(this).addClass('layui-form-checked');
                     if($(this).hasClass('header')){
-                        $(".layui-form-checkbox").addClass('layui-form-checked');
+                        $(".x-admin .layui-form-checkbox").addClass('layui-form-checked');
                     }
                 }
                 
             });
         },
         getData:function  () {
-            var obj = $(".layui-form-checked").not('.header');
+            var obj = $(".x-admin .layui-form-checked").not('.header');
             var arr=[];
             obj.each(function(index, el) {
                 arr.push(obj.eq(index).attr('data-id'));
@@ -57,7 +104,7 @@ $(function () {
         }
     }
 
-    //开启表格多选
+    // 开启表格多选
     tableCheck.init();
       
 
@@ -81,6 +128,8 @@ $(function () {
         $('.page-content').animate({left: '0px'}, 100);
         $(this).hide();
     });
+
+    
 
     $('.layui-tab-close').click(function(event) {
         $('.layui-tab-title li').eq(0).find('i').remove();
@@ -107,16 +156,33 @@ $(function () {
     })
 
     //左侧菜单效果
-    // $('#content').bind("click",function(event){
-    $('.left-nav #nav li').click(function (event) {
+    
+    $('.left-nav #nav').on('click', 'li', function(event) {
+
+        var index = $('.left-nav #nav li').index($(this));
 
         if($(this).children('.sub-menu').length){
             if($(this).hasClass('open')){
+
+                if($(this).parent().hasClass('sub-menu')){
+                    deleteCookie('left_menu_son');
+                }else{
+                    deleteCookie('left_menu_father');
+                }
+
                 $(this).removeClass('open');
                 $(this).find('.nav_right').html('&#xe697;');
                 $(this).children('.sub-menu').stop().slideUp();
                 $(this).siblings().children('.sub-menu').slideUp();
             }else{
+                
+
+                if($(this).parent().hasClass('sub-menu')){
+                    setCookie('left_menu_son',index);
+                }else{
+                    setCookie('left_menu_father',index);
+                }
+
                 $(this).addClass('open');
                 $(this).children('a').find('.nav_right').html('&#xe6a6;');
                 $(this).children('.sub-menu').stop().slideDown();
@@ -128,16 +194,41 @@ $(function () {
 
             var url = $(this).children('a').attr('_href');
             var title = $(this).find('cite').html();
-            var index  = $('.left-nav #nav li').index($(this));
+            // var index  = $('.left-nav #nav li').index($(this));
+
+            var is_refresh = $(this).attr('date-refresh')?true:false; 
 
             for (var i = 0; i <$('.x-iframe').length; i++) {
                 if($('.x-iframe').eq(i).attr('tab-id')==index+1){
                     tab.tabChange(index+1);
                     event.stopPropagation();
+
+                    if(is_refresh)
+                        $('.x-iframe').eq(i).attr("src",$('.x-iframe').eq(i).attr('src'));
+
                     return;
                 }
             };
             
+            if(getCookie('tab_list')){
+                tab_list = getCookie('tab_list').split(',');
+            }else{
+                tab_list = [];
+            }
+
+            var is_exist = false;
+
+            for (var i in tab_list) {
+                if(tab_list[i]==index)
+                    is_exist = true;
+            }
+
+            if(!is_exist){
+                tab_list.push(index);
+            }
+
+            setCookie('tab_list',tab_list);
+
             tab.tabAdd(title,url,index+1);
             tab.tabChange(index+1);
         }
@@ -145,6 +236,18 @@ $(function () {
         event.stopPropagation();
          
     })
+
+    // 左侧菜单记忆功能
+    if(getCookie('left_menu_father')!=null){
+        $('.left-nav #nav li').eq(getCookie('left_menu_father')).click();
+    }
+
+    if(getCookie('left_menu_son')!=null){
+        $('.left-nav #nav li').eq(getCookie('left_menu_son')).click();
+    }
+     
+     
+     
     
 })
 var cateIds = [];
@@ -190,15 +293,15 @@ function x_admin_show(title,url,w,h){
         content: url,
         success: function(){
           //窗口加载成功刷新frame
-          location.replace(location.href);
+          // location.replace(location.href);
         },
         cancel:function(){
           //关闭窗口之后刷新frame
-          location.replace(location.href);
+          // location.replace(location.href);
         },
         end:function(){
           //窗口销毁之后刷新frame
-          location.replace(location.href);
+          // location.replace(location.href);
         }
     });
 }
@@ -208,5 +311,11 @@ function x_admin_close(){
     var index = parent.layer.getFrameIndex(window.name);
     parent.layer.close(index);
 }
+
+function x_admin_father_reload(){
+    
+    parent.location.reload();
+}
+
 
 
