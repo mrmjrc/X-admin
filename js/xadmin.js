@@ -1,12 +1,10 @@
-Array.prototype.remove = function(val) { 
-    var index = this.indexOf(val); 
-    if (index > -1) { 
-        return  this.splice(index, 1); 
-    }
+// Array.prototype.remove = function(val) { 
+//     var index = this.indexOf(val); 
+//     if (index > -1) { 
+//         return  this.splice(index, 1); 
+//     }
 
-};
-
-
+// };
 
 $(function () {
 
@@ -16,9 +14,103 @@ $(function () {
         layer = layui.layer;
         element = layui.element;
 
+        //tab 右键事件
+        $(".layui-tab-title").on('contextmenu', 'li', function(event) {
+            var tab_left = $(this).position().left;
+            var left = $(this).position().top;
+            this_index = $(this).attr('lay-id');
+            $('#tab_right').css({'left':tab_left+50}).show();
+            $('#tab_show').show();
+            return false;
+        });
 
+        $('.page-content,#tab_show,.container,.left-nav').click(function(event) {
+            $('#tab_right').hide();
+            $('#tab_show').hide();
+        });
+
+        $('#tab_right').on('click', 'dd', function(event) {
+
+            if(getCookie('tab_list')){
+                var tab_list = getCookie('tab_list').split(',');
+            }else{
+                var tab_list = [];
+            }
+
+            var type = $(this).attr('data-type');
+
+            if(type=='this'){
+
+                tab.tabDelete(this_index);
+
+                var index = -1;
+
+                for (var i in tab_list) {
+                    if(tab_list[i]==(this_index-1)){
+                        index = i;
+                    }
+                 } 
+                if (index > -1) { 
+                    tab_list.splice(index, 1); 
+                }
+
+                setCookie('tab_list',tab_list);
+            }
+            if(type=='all'){
+
+                for (var i in tab_list) {
+                   tab.tabDelete(Number(tab_list[i])+1); 
+                }
+
+                setCookie('tab_list',[]);
+            }
+
+            if(type=='other'){
+
+                for (var i in tab_list) {
+                    if(tab_list[i]!=(this_index-1)){
+                        tab.tabDelete(Number(tab_list[i])+1); 
+                    }
+                }
+
+                setCookie('tab_list',[this_index-1]);
+            }
+            // alert(this_index);
+            $('#tab_right').hide();
+        });
+
+        // tab 双击事件
+        $(".layui-tab-title").on('dblclick', 'li', function(event) {
+            var id = $(this).attr('lay-id');
+            tab.tabDelete(id);
+
+            if(getCookie('tab_list')){
+                tab_list = getCookie('tab_list').split(',');
+            }else{
+                tab_list = [];
+            }
+
+
+            var index = -1;
+
+            for (var i in tab_list) {
+                if(tab_list[i]==(id-1)){
+                    index = i;
+                }
+             } 
+
+
+            if (index > -1) { 
+                tab_list.splice(index, 1); 
+            }
+
+            setCookie('tab_list',tab_list);
+            return false;
+        });
+
+        // tab 删除事件
         element.on('tabDelete(xbs_tab)', function(data){
-          var id  = $(this).parent().attr('lay-id')-1;
+            var id  = $(this).parent().attr('lay-id')-1;
 
             if(getCookie('tab_list')){
                 tab_list = getCookie('tab_list').split(',');
@@ -65,10 +157,10 @@ $(function () {
         }
         ,tabDelete: function(othis){
           //删除指定Tab项
-          element.tabDelete('xbs_tab', '44'); //删除：“商品管理”
+          element.tabDelete('xbs_tab', othis); //删除：“商品管理”
           
-          
-          othis.addClass('layui-btn-disabled');
+           
+          // othis.addClass('layui-btn-disabled');
         }
         ,tabChange: function(id){
           //切换到指定Tab项
