@@ -45,5 +45,5 @@ http://x.xuebingsi.com
 * 增加tab右键菜单，可实现 关闭当前/关闭其它/关闭全部
 
 
-## 2019-03-06更新
+## 2019-03-07更新
 * 是否开启刷新记忆tab功能, 通过index 页面增加 var is_remember = false;不增加默认开启
