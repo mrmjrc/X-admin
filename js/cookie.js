@@ -1,4 +1,6 @@
 function setCookie(name, value, expires, path, domain, secure) {
+    if(typeof is_remember!="undefined")
+        return false;
     var today = new Date();
     today.setTime( today.getTime() );
     var expires_date = new Date( today.getTime() + (expires) );
