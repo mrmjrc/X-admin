@@ -5,10 +5,8 @@
 //     }
 
 // };
-
 $(function () {
 
-    //加载弹出层
     layui.use(['form','element'],
     function() {
         layer = layui.layer;
@@ -146,7 +144,7 @@ $(function () {
     });
 
     //触发事件
-  var tab = {
+    tab = {
         tabAdd: function(title,url,id){
           //新增一个Tab项
           element.tabAdd('xbs_tab', {
@@ -407,6 +405,48 @@ function x_admin_close(){
 function x_admin_father_reload(){
     
     parent.location.reload();
+}
+
+function x_admin_add_to_tab(title,url,is_refresh) {
+
+    var id = md5(url);
+
+    is_refresh =  arguments[2] ? arguments[2] : false;
+
+
+    for (var i = 0; i <$('.x-iframe').length; i++) {
+        if($('.x-iframe').eq(i).attr('tab-id')==id){
+            tab.tabChange(id);
+            event.stopPropagation();
+
+            if(is_refresh)
+                $('.x-iframe').eq(i).attr("src",$('.x-iframe').eq(i).attr('src'));
+
+            return;
+        }
+    };
+    
+    if(getCookie('tab_list')){
+        tab_list = getCookie('tab_list').split(',');
+    }else{
+        tab_list = [];
+    }
+
+    var is_exist = false;
+
+    for (var i in tab_list) {
+        if(tab_list[i]==id)
+            is_exist = true;
+    }
+
+    if(!is_exist){
+        tab_list.push(id);
+    }
+
+    setCookie('tab_list',tab_list);
+
+    tab.tabAdd(title,url,id);
+    tab.tabChange(id);
 }
 
 

@@ -14,18 +14,20 @@ http://x.xuebingsi.com
 
 交流QQ群：519492808
 
-## 2018-04-25更新
+## 2019-03-19更新
+* 增加非菜单打开tab函数 x_admin_add_to_tab(title,url,is_refresh) titel为tab标题,url为打开页面地址,is_refresh 可选参数，重复点击是否刷新，默认为false不刷新,true为重复点击刷新页面
+用法:
+### index.html 中直接 x_admin_add_to_tab('在tab打开','http://www.baidu.com',true)
+### iframe页面中  用 parent.x_admin_add_to_tab('在tab打开','http://www.163.com',true)
+我的桌面有demo
 
-* 针对首页欢迎页面调整
-* 修改tab窗口首页为能关闭
-* 对角色增加页面重新设计
-* 增加图标字体对应的编码
+## 2019-03-07更新
+* 是否开启刷新记忆tab功能, 通过index 页面增加 var is_remember = false;不增加默认开启
 
-## 2018-04-30更新
+## 2019-03-06更新
 
-* 登录页面加上动画效果
-* 首页欢迎页面也加动画效果
-
+* 增加tab双击关闭当前tab
+* 增加tab右键菜单，可实现 关闭当前/关闭其它/关闭全部
 
 ## 2019-02-28更新
 
@@ -39,11 +41,14 @@ http://x.xuebingsi.com
 * tab记忆功能，刷新保留之前打开的tab （利用cookie 保存点击过的 索引，刷新读取cookie对应的索引 进行打开)
 
 
-## 2019-03-06更新
+## 2018-04-30更新
 
-* 增加tab双击关闭当前tab
-* 增加tab右键菜单，可实现 关闭当前/关闭其它/关闭全部
+* 登录页面加上动画效果
+* 首页欢迎页面也加动画效果
 
+## 2018-04-25更新
 
-## 2019-03-07更新
-* 是否开启刷新记忆tab功能, 通过index 页面增加 var is_remember = false;不增加默认开启
+* 针对首页欢迎页面调整
+* 修改tab窗口首页为能关闭
+* 对角色增加页面重新设计
+* 增加图标字体对应的编码
