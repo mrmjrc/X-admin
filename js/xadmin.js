@@ -58,6 +58,7 @@ $(function () {
 
                 for (var i in tab_list) {
                    tab.tabDelete(Number(tab_list[i])+1); 
+                   tab.tabDelete(tab_list[i]);
                 }
 
                 setCookie('tab_list',[]);
@@ -67,7 +68,7 @@ $(function () {
 
                 for (var i in tab_list) {
                     if(tab_list[i]!=(this_index-1)){
-                        tab.tabDelete(Number(tab_list[i])+1); 
+                        tab.tabDelete(Number(tab_list[i])+1);
                     }
                 }
 
