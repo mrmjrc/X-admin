@@ -14,11 +14,18 @@ http://x.xuebingsi.com
 
 交流QQ群：519492808
 
+## 2019-03-30更新
+* 修改 x_admin_show 弹出窗口实现最大化，默认窗口非最大化，如果需要弹出窗口最大化，在最后一个参数传 true
+
+修复x_admin_add_to_tab 函数bug，在多个页面切换过程的报错。
+
+x_admin_show(title,url,w,h,full=false)
+
 ## 2019-03-19更新
 * 增加非菜单打开tab函数 x_admin_add_to_tab(title,url,is_refresh) titel为tab标题,url为打开页面地址,is_refresh 可选参数，重复点击是否刷新，默认为false不刷新,true为重复点击刷新页面
 用法:
-### index.html 中直接 x_admin_add_to_tab('在tab打开','http://www.baidu.com',true)
-### iframe页面中  用 parent.x_admin_add_to_tab('在tab打开','http://www.163.com',true)
+index.html 中直接 x_admin_add_to_tab('在tab打开','http://www.baidu.com',true)
+iframe页面中  用 parent.x_admin_add_to_tab('在tab打开','http://www.163.com',true)
 我的桌面有demo
 
 ## 2019-03-07更新
