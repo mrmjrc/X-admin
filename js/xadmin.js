@@ -360,7 +360,7 @@ function getCateId(cateId) {
     w       弹出层宽度（缺省调默认值）
     h       弹出层高度（缺省调默认值）
 */
-function x_admin_show(title,url,w,h){
+function x_admin_show(title,url,w,h,full=false){
     if (title == null || title == '') {
         title=false;
     };
@@ -373,7 +373,7 @@ function x_admin_show(title,url,w,h){
     if (h == null || h == '') {
         h=($(window).height() - 50);
     };
-    layer.open({
+    var index = layer.open({
         type: 2,
         area: [w+'px', h +'px'],
         fix: false, //不固定
@@ -395,6 +395,9 @@ function x_admin_show(title,url,w,h){
           // location.replace(location.href);
         }
     });
+    if(full){
+       layer.full(index); 
+    }
 }
 
 /*关闭弹出框口*/
@@ -418,7 +421,7 @@ function x_admin_add_to_tab(title,url,is_refresh) {
     for (var i = 0; i <$('.x-iframe').length; i++) {
         if($('.x-iframe').eq(i).attr('tab-id')==id){
             tab.tabChange(id);
-            event.stopPropagation();
+            // event.stopPropagation();
 
             if(is_refresh)
                 $('.x-iframe').eq(i).attr("src",$('.x-iframe').eq(i).attr('src'));
